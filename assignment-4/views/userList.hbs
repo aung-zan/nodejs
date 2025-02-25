@@ -1,0 +1,11 @@
+<main>
+    <h1>User List</h1>
+
+    <ul>
+        {{#each users}}
+            {{#with this}}
+                <li>{{name}}</li>
+            {{/with}}
+        {{/each}}
+    </ul>
+</main>
