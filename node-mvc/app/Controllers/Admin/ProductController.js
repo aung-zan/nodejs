@@ -8,7 +8,8 @@ exports.create = (req, res, next) => {
 }
 
 exports.store = (req, res, next) => {
-  Product.create(req.body);
+  const product = new Product();
+  product.create(req.body);
 
   res.redirect('/');
 }
