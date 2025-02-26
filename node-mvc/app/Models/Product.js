@@ -1,15 +1,12 @@
 const Model = require("./Model");
 
-const products = [];
-
 module.exports = class Product extends Model {
   create(product) {
-    products.push(product);
-    super.read();
+    super.write(product);
   }
 
-  // remove static when data saving method is changed from memory.
-  static all() {
-    return products;
+  async all() {
+    const data = await super.read();
+    return data;
   }
 }

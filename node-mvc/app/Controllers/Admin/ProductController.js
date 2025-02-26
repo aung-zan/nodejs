@@ -7,9 +7,14 @@ exports.create = (req, res, next) => {
   });
 }
 
-exports.store = (req, res, next) => {
-  const product = new Product();
-  product.create(req.body);
+exports.store = async (req, res, next) => {
+  try {
+    const product = new Product();
+    await product.create(req.body);
 
-  res.redirect('/');
+    res.redirect('/');
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).send("Internal Server Error");
+  }
 }
