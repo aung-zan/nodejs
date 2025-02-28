@@ -4,7 +4,7 @@
 <body>
     <%- include('../../include/navigation.ejs') %>
     <main>
-        <% if (Object.keys(cart).length == 0) { %>
+        <% if (Object.keys(cart).length == 0 || cart.products.length == 0) { %>
             <h1>No Products in Cart!</h1>
         <% } else { %>
             <h3>Total Price - <%= cart.totalPrice %></h3>
@@ -12,7 +12,7 @@
                 <% cart.products.forEach(p => { %>
                     <li>
                         <p><%= p.title %> (<%= p.qty %>)</p>
-                        <form action="/cart-delete-item" method="POST">
+                        <form action="/cart/delete" method="POST">
                             <input type="hidden" value="<%= p.id %>" name="productId">
                             <button class="btn" type="submit">Delete</button>
                         </form>

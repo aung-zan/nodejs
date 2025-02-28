@@ -60,7 +60,14 @@ module.exports = class Cart extends Model {
     return cart;
   }
 
-  async delete() {
-    //
+  async delete(productId) {
+    const cart = await super.all();
+
+    const productInCart = cart.products.find(product => product.id === productId);
+
+    cart["products"] = cart.products.filter(product => product.id !== productId);
+    cart["totalPrice"] -= productInCart.price * productInCart.qty;
+
+    return super.delete(productId, [cart]);
   }
 }

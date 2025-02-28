@@ -36,6 +36,16 @@ exports.details = async (req, res, next) => {
   }
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = async (req, res, next) => {
+  try {
+    const productId = Number(req.body.productId);
 
+    const cart = new Cart();
+    await cart.delete(productId);
+
+    res.redirect("/cart");
+  } catch (error) {
+    console.error("Error deleting product in cart:", error);
+    res.status(500).send("Internal Server Error");
+  }
 }

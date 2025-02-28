@@ -104,11 +104,18 @@ module.exports = class Module {
   /**
    * delete a product by id.
    * @param {*} id
+   * @param {*} cartArr
    */
-  async delete(id) {
-    const records = await this.all();
+  async delete(id, cartArr = []) {
+    let newRecords;
 
-    const newRecords = records.filter(record => record.id !== id);
+    if (cartArr.length == 0) {
+      const records = await this.all();
+
+      newRecords = records.filter(record => record.id !== id);
+    } else {
+      [newRecords] = cartArr;
+    }
 
     const recordsJson = JSON.stringify(newRecords);
     await fs.writeFile(this.dbFile, recordsJson, "utf-8");
