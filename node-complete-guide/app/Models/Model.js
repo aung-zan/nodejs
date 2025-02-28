@@ -19,15 +19,20 @@ module.exports = class Module {
 
   /**
    * get all records.
+   * @param {*} notCart
    * @returns array
    */
-  async all() {
+  async all(notCart = true) {
     try {
       const recordsJson = await fs.readFile(this.dbFile, "utf-8");
-      return recordsJson ? JSON.parse(recordsJson) : [];
+      if (recordsJson) {
+        return JSON.parse(recordsJson);
+      } else {
+        return notCart ? [] : {};
+      }
     } catch (error) {
       if (error.code === "ENOENT") {
-        return [];
+        return notCart ? [] : {};
       }
       throw error;
     }
@@ -36,12 +41,20 @@ module.exports = class Module {
   /**
    * save a record.
    * @param {*} data
+   * @param {*} notCart
    */
-  async create(data) {
-    data['id'] = await this.getNextId();
+  async create(data, notCart = true) {
+    let records;
 
-    const records = await this.all();
-    records.push(data);
+    if (notCart) {
+      data['id'] = await this.getNextId();
+
+      records = await this.all();
+      records.push(data);
+    } else {
+      records = data;
+    }
+
     const recordsJson = JSON.stringify(records);
 
     // await this.delay(); this code is for testing.

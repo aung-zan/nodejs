@@ -18,6 +18,11 @@ module.exports = class Product extends Model {
     return super.create(product);
   }
 
+  async details(id) {
+    const product = await super.getById(id);
+    return product;
+  }
+
   async edit(id) {
     const product = await super.getById(id);
     return product;
