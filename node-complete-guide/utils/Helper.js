@@ -11,4 +11,11 @@ const getMaxId = (records) => {
   return Math.max(...ids);
 }
 
+const delay = () => {
+  return new Promise(resolve => {
+    setTimeout(resolve, 5000);
+  });
+}
+
 exports.getMaxId = getMaxId;
+exports.delay = delay;

@@ -1,6 +1,14 @@
+const path = require("path");
+
 const Model = require("./Model");
 
+const dbFile = path.join(__dirname, "../../database/products.json");
+
 module.exports = class Product extends Model {
+  constructor() {
+    super(dbFile);
+  }
+
   async all() {
     const data = await super.all();
     return data;

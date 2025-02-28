@@ -1,27 +1,20 @@
 const fs = require("fs").promises;
-const path = require("path");
 
 const Helper = require("../../utils/Helper");
-
-const dbFile = path.join(__dirname, "../../database/database.json");
 module.exports = class Module {
+  constructor(dbPath) {
+    this.dbFile = dbPath
+  }
   /**
    * get the next id.
    * @returns number
    */
   async getNextId() {
-    const data = await fs.readFile(dbFile, "utf-8");
+    const data = await fs.readFile(this.dbFile, "utf-8");
     const products = data ? JSON.parse(data) : [];
 
     const maxId = Helper.getMaxId(products, ['id']);
     return maxId + 1;
-  }
-
-  // for testing purpose.
-  delay() {
-    return new Promise(resolve => {
-      setTimeout(resolve, 5000);
-    })
   }
 
   /**
@@ -30,8 +23,8 @@ module.exports = class Module {
    */
   async all() {
     try {
-      const data = await fs.readFile(dbFile, "utf-8");
-      return data ? JSON.parse(data) : [];
+      const recordsJson = await fs.readFile(this.dbFile, "utf-8");
+      return recordsJson ? JSON.parse(recordsJson) : [];
     } catch (error) {
       if (error.code === "ENOENT") {
         return [];
@@ -42,17 +35,17 @@ module.exports = class Module {
 
   /**
    * save a record.
-   * @param {*} product
+   * @param {*} data
    */
-  async create(product) {
-    product['id'] = await this.getNextId();
+  async create(data) {
+    data['id'] = await this.getNextId();
 
-    const products = await this.all();
-    products.push(product);
-    const data = JSON.stringify(products);
+    const records = await this.all();
+    records.push(data);
+    const recordsJson = JSON.stringify(records);
 
     // await this.delay(); this code is for testing.
-    await fs.writeFile(dbFile, data, "utf-8");
+    await fs.writeFile(this.dbFile, recordsJson, "utf-8");
   }
 
   /**
@@ -77,30 +70,34 @@ module.exports = class Module {
   /**
    * update a product by id.
    * @param {*} id
-   * @param {*} product
+   * @param {*} data
    */
-  async update(id, product) {
+  async update(id, data) {
     const records = await this.all();
 
     const recordIndex = records.findIndex(record => {
       return record.id === id;
     });
 
-    product['id'] = id
+    data['id'] = id
     // Do it immutable (original array stays unchanged)
     const newRecords = [...records];
-    newRecords[recordIndex] = product;
+    newRecords[recordIndex] = data;
 
-    const data = JSON.stringify(newRecords);
-    await fs.writeFile(dbFile, data, "utf-8");
+    const recordsJson = JSON.stringify(newRecords);
+    await fs.writeFile(this.dbFile, recordsJson, "utf-8");
   }
 
+  /**
+   * delete a product by id.
+   * @param {*} id
+   */
   async delete(id) {
     const records = await this.all();
 
     const newRecords = records.filter(record => record.id !== id);
 
-    const data = JSON.stringify(newRecords);
-    await fs.writeFile(dbFile, data, "utf-8");
+    const recordsJson = JSON.stringify(newRecords);
+    await fs.writeFile(this.dbFile, recordsJson, "utf-8");
   }
 }
