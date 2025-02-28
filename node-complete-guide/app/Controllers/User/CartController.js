@@ -8,6 +8,9 @@ exports.create = async (req, res, next) => {
     const p = new Product();
     const product = await p.details(productId);
 
+    if (!product) {
+      throw new Error("Product not found");
+    }
     const cartData = {id: productId, title: product.title, price: Number(product.price)};
 
     const cart = new Cart();

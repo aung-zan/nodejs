@@ -69,15 +69,7 @@ module.exports = class Module {
   async getById(id) {
     const records = await this.all();
     // TODO: think when empty array and wrong id.
-    let filterRecord;
-
-    records.forEach(record => {
-      if (record.id === id) {
-        filterRecord = record;
-      }
-    });
-
-    return filterRecord;
+    return records.find(record => record.id === id);
   }
 
   /**
