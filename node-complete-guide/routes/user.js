@@ -15,8 +15,13 @@ routes.get('/cart', CartController.details);
 routes.post('/cart', CartController.create);
 routes.post('/cart/delete', CartController.delete);
 
-routes.get('/orders');
+routes.get('/orders', (req, res, next) => {
+  res.render("user/order/details.ejs", {
+    title: "Orders Details",
+    path: "/orders",
+  });
+});
 
-routes.get('/checkout');
+// routes.get('/checkout');
 
 module.exports = routes;
