@@ -1,38 +1,39 @@
-const path = require("path");
+const db = require("./Database");
 
-const Model = require("./Model");
-
-const dbFile = path.join(__dirname, "../../database/products.json");
-
-module.exports = class Product extends Model {
-  constructor() {
-    super(dbFile);
+module.exports = class Product {
+  all() {
+    return db.execute("SELECT * FROM products;");
   }
 
-  async all() {
-    const data = await super.all();
-    return data;
+  async create(data) {
+    const productData = [
+      data.title, data.price, data.description, data.imageUrl
+    ];
+
+    return db.execute(
+      "INSERT INTO products (title, price, description, imageUrl) values(?, ?, ?, ?)",
+      productData
+    );
   }
 
-  async create(product) {
-    return super.create(product);
-  }
+  async getById(id) {
+    const [productData] = await db.execute("SELECT * FROM products WHERE id = ?", [id]);
 
-  async details(id) {
-    const product = await super.getById(id);
-    return product;
-  }
-
-  async edit(id) {
-    const product = await super.getById(id);
-    return product;
+    return productData;
   }
 
   async update(id, data) {
-    return super.update(id, data);
+    const productData = [
+      data.title, data.price, data.description, data.imageUrl, id
+    ];
+
+    return db.execute(
+      "UPDATE products SET title = ?, price = ?, description = ?, imageURL = ? where id = ?",
+      productData
+    );
   }
 
   async delete(id) {
-    return super.delete(id);
+    return db.execute("DELETE FROM products where id = ?", [id]);
   }
 }

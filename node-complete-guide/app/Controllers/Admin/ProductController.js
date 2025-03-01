@@ -3,7 +3,7 @@ const Product = require("../../Models/Product");
 exports.list = async (req, res, next) => {
   try {
     const product = new Product();
-    const products = await product.all();
+    const [products] = await product.all();
 
     res.render("admin/product/list.ejs", {
       title: "Product List",
@@ -39,7 +39,7 @@ exports.edit = async (req, res, next) => {
   const id = Number(req.params.productId);
 
   const p = new Product();
-  const product = await p.getById(id);
+  const [product] = await p.getById(id);
 
   res.render("admin/product/edit.ejs", {
     title: "Edit Product",
