@@ -1,25 +1,115 @@
 const fs = require("fs").promises;
-const path = require("path");
 
-const dbFile = path.join(__dirname, "../../database/database.json");
+const Helper = require("../../utils/Helper");
 module.exports = class Module {
-  async read() {
+  constructor(dbPath) {
+    this.dbFile = dbPath
+  }
+  /**
+   * get the next id.
+   * @returns number
+   */
+  async getNextId() {
+    const data = await fs.readFile(this.dbFile, "utf-8");
+    const products = data ? JSON.parse(data) : [];
+
+    const maxId = Helper.getMaxId(products, ['id']);
+    return maxId + 1;
+  }
+
+  /**
+   * get all records.
+   * @param {*} notCart
+   * @returns array
+   */
+  async all(notCart = true) {
     try {
-      const data = await fs.readFile(dbFile, "utf-8");
-      return data ? JSON.parse(data) : [];
+      const recordsJson = await fs.readFile(this.dbFile, "utf-8");
+      if (recordsJson) {
+        return JSON.parse(recordsJson);
+      } else {
+        return notCart ? [] : {};
+      }
     } catch (error) {
       if (error.code === "ENOENT") {
-        return [];
+        return notCart ? [] : {};
       }
       throw error;
     }
   }
 
-  async write(product) {
-    const products = await this.read();
-    products.push(product);
-    const data = JSON.stringify(products);
+  /**
+   * save a record.
+   * @param {*} data
+   * @param {*} notCart
+   */
+  async create(data, notCart = true) {
+    let records;
 
-    await fs.writeFile(dbFile, data, "utf-8");
+    if (notCart) {
+      data['id'] = await this.getNextId();
+
+      records = await this.all();
+      records.push(data);
+    } else {
+      records = data;
+    }
+
+    const recordsJson = JSON.stringify(records);
+
+    // await this.delay(); this code is for testing.
+    await fs.writeFile(this.dbFile, recordsJson, "utf-8");
+  }
+
+  /**
+   * get a record by id.
+   * @param {*} id
+   * @returns object
+   */
+  async getById(id) {
+    const records = await this.all();
+    // TODO: think when empty array and wrong id.
+    return records.find(record => record.id === id);
+  }
+
+  /**
+   * update a product by id.
+   * @param {*} id
+   * @param {*} data
+   */
+  async update(id, data) {
+    const records = await this.all();
+
+    const recordIndex = records.findIndex(record => {
+      return record.id === id;
+    });
+
+    data['id'] = id
+    // Do it immutable (original array stays unchanged)
+    const newRecords = [...records];
+    newRecords[recordIndex] = data;
+
+    const recordsJson = JSON.stringify(newRecords);
+    await fs.writeFile(this.dbFile, recordsJson, "utf-8");
+  }
+
+  /**
+   * delete a product by id.
+   * @param {*} id
+   * @param {*} cartArr
+   */
+  async delete(id, cartArr = []) {
+    let newRecords;
+
+    if (cartArr.length == 0) {
+      const records = await this.all();
+
+      newRecords = records.filter(record => record.id !== id);
+    } else {
+      [newRecords] = cartArr;
+    }
+
+    const recordsJson = JSON.stringify(newRecords);
+    await fs.writeFile(this.dbFile, recordsJson, "utf-8");
   }
 }

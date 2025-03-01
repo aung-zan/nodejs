@@ -1,5 +1,5 @@
 {
-  "name": "node-mvc",
+  "name": "complete-guide",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
@@ -11,8 +11,8 @@
   "description": "",
   "dependencies": {
     "body-parser": "^1.20.3",
-    "express": "^4.21.2",
-    "express-handlebars": "^8.0.1"
+    "ejs": "^3.1.10",
+    "express": "^4.21.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
