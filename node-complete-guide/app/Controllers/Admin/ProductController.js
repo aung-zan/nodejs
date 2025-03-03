@@ -25,7 +25,7 @@ exports.create = (req, res, next) => {
 
 exports.store = async (req, res, next) => {
   try {
-    await Product.create({
+    await req.user.createProduct({
       title: req.body.title,
       imageUrl: req.body.imageUrl,
       price: req.body.price,
