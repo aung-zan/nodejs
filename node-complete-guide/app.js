@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const sequelize = require("./app/Models/Database");
 
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
@@ -21,4 +22,11 @@ app.use('/admin/', adminRoutes);
 app.use(userRoutes);
 app.use(errorRoutes);
 
-app.listen(3000);
+(async () => {
+  try {
+    await sequelize.sync();
+    app.listen(3000);
+  } catch (error) {
+    console.log(error);
+  }
+})();

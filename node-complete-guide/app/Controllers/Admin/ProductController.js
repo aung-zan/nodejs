@@ -1,9 +1,9 @@
+const { where } = require("sequelize");
 const Product = require("../../Models/Product");
 
 exports.list = async (req, res, next) => {
   try {
-    const product = new Product();
-    const [products] = await product.all();
+    const products = await Product.findAll();
 
     res.render("admin/product/list.ejs", {
       title: "Product List",
@@ -25,8 +25,12 @@ exports.create = (req, res, next) => {
 
 exports.store = async (req, res, next) => {
   try {
-    const product = new Product();
-    await product.create(req.body);
+    await Product.create({
+      title: req.body.title,
+      imageUrl: req.body.imageUrl,
+      price: req.body.price,
+      description: req.body.description
+    });
 
     res.redirect("/admin/product");
   } catch (error) {
@@ -36,10 +40,9 @@ exports.store = async (req, res, next) => {
 }
 
 exports.edit = async (req, res, next) => {
-  const id = Number(req.params.productId);
+  const id = req.params.productId;
 
-  const p = new Product();
-  const [product] = await p.getById(id);
+  const product = await Product.findByPk(id);
 
   res.render("admin/product/edit.ejs", {
     title: "Edit Product",
@@ -49,19 +52,30 @@ exports.edit = async (req, res, next) => {
 }
 
 exports.update = async (req, res, next) => {
-  const id = Number(req.params.productId);
+  const id = req.params.productId;
 
-  const product = new Product();
-  await product.update(id, req.body);
+  await Product.update({
+    title: req.body.title,
+    imageUrl: req.body.imageUrl,
+    price: req.body.price,
+    description: req.body.description
+  }, {
+    where: {
+      id: id
+    }
+  })
 
   res.redirect("/admin/product");
 }
 
 exports.delete = async (req, res, next) => {
-  const id = Number(req.params.productId);
+  const id = req.params.productId;
 
-  const product = new Product();
-  await product.delete(id);
+  await Product.destroy({
+    where: {
+      id: id
+    }
+  })
 
   res.redirect("/admin/product");
 }
