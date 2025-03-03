@@ -33,8 +33,12 @@ exports.create = async (req, res, next) => {
 
 exports.details = async (req, res, next) => {
   try {
+    let products = [];
     const cart = await req.user.getCart();
-    const products = await cart.getProducts();
+
+    if (cart) {
+      products = await cart.getProducts();
+    }
 
     res.render("user/cart/details.ejs", {
       title: "Cart Details",
