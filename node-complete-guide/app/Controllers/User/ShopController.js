@@ -2,8 +2,7 @@ const Product = require("../../Models/Product");
 
 exports.list = async (req, res, next) => {
   try {
-    const product = new Product();
-    const products = await product.all();
+    const products = await Product.findAll();
 
     res.render("user/shop/list.ejs", {
       title: "Shop",

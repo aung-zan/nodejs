@@ -1,20 +1,28 @@
-const Cart = require("../../Models/Cart");
 const Product = require("../../Models/Product");
 
 exports.create = async (req, res, next) => {
   try {
-    const productId = Number(req.body.productId);
+    let cart;
+    let product;
+    let quantity;
+    const productId = req.body.productId;
 
-    const p = new Product();
-    const product = await p.details(productId);
-
-    if (!product) {
-      throw new Error("Product not found");
+    cart = await req.user.getCart();
+    if (! cart) {
+      cart = await req.user.createCart();
     }
-    const cartData = {id: productId, title: product.title, price: Number(product.price)};
 
-    const cart = new Cart();
-    await cart.create(cartData);
+    const products = await cart.getProducts({ where: { id: productId } });
+
+    if (products.length > 0) {
+      product = products[0];
+      quantity = product.cartItem.quantity + 1;
+    } else {
+      product = await Product.findByPk(productId);
+      quantity = 1;
+    }
+
+    await cart.addProduct(product, { through: { quantity: quantity } });
 
     res.redirect("/");
   } catch (error) {
@@ -25,13 +33,13 @@ exports.create = async (req, res, next) => {
 
 exports.details = async (req, res, next) => {
   try {
-    const c = new Cart();
-    const cart = await c.details();
+    const cart = await req.user.getCart();
+    const products = await cart.getProducts();
 
     res.render("user/cart/details.ejs", {
       title: "Cart Details",
       path: "/cart",
-      cart: cart
+      products: products
     });
   } catch (error) {
     console.error("Error fetching cart:", error);
@@ -41,10 +49,10 @@ exports.details = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    const productId = Number(req.body.productId);
+    const productId = req.body.productId;
 
-    const cart = new Cart();
-    await cart.delete(productId);
+    const cart = await req.user.getCart();
+    await cart.removeProduct([productId]);
 
     res.redirect("/cart");
   } catch (error) {

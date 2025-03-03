@@ -8,6 +8,8 @@ const errorRoutes = require("./routes/error");
 
 const User = require("./app/Models/User");
 const Product = require("./app/Models/Product");
+const Cart = require("./app/Models/Cart");
+const CartItem = require("./app/Models/CartItem");
 
 // initialize the app.
 const app = express();
@@ -40,6 +42,11 @@ app.use(errorRoutes);
 
 // establish the relationships between models.
 User.hasMany(Product);
+User.hasOne(Cart);
+
+Product.belongsToMany(Cart, { through: CartItem });
+
+Cart.belongsToMany(Product, { through: CartItem });
 
 // start the app.
 (async () => {

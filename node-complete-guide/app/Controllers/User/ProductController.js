@@ -2,8 +2,7 @@ const Product = require("../../Models/Product");
 
 exports.list = async (req, res, next) => {
   try {
-    const product = new Product();
-    const products = await product.all();
+    const products = await Product.findAll();
 
     res.render("user/product/list.ejs", {
       title: "Products List",
@@ -18,10 +17,9 @@ exports.list = async (req, res, next) => {
 
 exports.details = async (req, res, next) => {
   try {
-    const id = Number(req.params.productId);
+    const id = req.params.productId;
 
-    const p = new Product();
-    const product = await p.getById(id);
+    const product = await Product.findByPk(id);
 
     res.render("user/product/details.ejs", {
       title: "Product Details",
