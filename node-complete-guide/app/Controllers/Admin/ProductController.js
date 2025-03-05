@@ -1,4 +1,3 @@
-const { where } = require("sequelize");
 const Product = require("../../Models/Product");
 
 exports.list = async (req, res, next) => {
@@ -25,12 +24,10 @@ exports.create = (req, res, next) => {
 
 exports.store = async (req, res, next) => {
   try {
-    await req.user.createProduct({
-      title: req.body.title,
-      imageUrl: req.body.imageUrl,
-      price: req.body.price,
-      description: req.body.description
-    });
+    const {title, price, description, imageUrl} = req.body;
+
+    const p = new Product(title, price, description, imageUrl);
+    await p.create();
 
     res.redirect("/admin/product");
   } catch (error) {
@@ -40,42 +37,47 @@ exports.store = async (req, res, next) => {
 }
 
 exports.edit = async (req, res, next) => {
-  const id = req.params.productId;
+  try {
+    const id = req.params.productId;
 
-  const product = await Product.findByPk(id);
+    const product = await Product.findById(id);
 
-  res.render("admin/product/edit.ejs", {
-    title: "Edit Product",
-    path: "/admin/product",
-    product: product
-  });
+    res.render("admin/product/edit.ejs", {
+      title: "Edit Product",
+      path: "/admin/product",
+      product: product
+    });
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    res.status(500).send("Internal Server Error");
+  }
 }
 
 exports.update = async (req, res, next) => {
-  const id = req.params.productId;
+  try {
+    const id = req.params.productId;
 
-  await Product.update({
-    title: req.body.title,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    description: req.body.description
-  }, {
-    where: {
-      id: id
-    }
-  })
+    const {title, price, description, imageUrl} = req.body;
 
-  res.redirect("/admin/product");
+    const p = new Product(title, price, description, imageUrl);
+    await p.update(id);
+
+    res.redirect("/admin/product");
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).send("Internal Server Error");
+  }
 }
 
 exports.delete = async (req, res, next) => {
-  const id = req.params.productId;
+  try {
+    const id = req.params.productId;
 
-  await Product.destroy({
-    where: {
-      id: id
-    }
-  })
+    await Product.delete(id);
 
-  res.redirect("/admin/product");
+    res.redirect("/admin/product");
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).send("Internal Server Error");
+  }
 }

@@ -7,7 +7,7 @@
     <%- include("../../include/navigation.ejs") %>
 
     <main>
-        <form class="product-form" action="/admin/product/<%= product.id %>" method="POST">
+        <form class="product-form" action="/admin/product/<%= product._id %>" method="POST">
             <div class="form-control">
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" autocomplete="off" value="<%= product.title %>">
