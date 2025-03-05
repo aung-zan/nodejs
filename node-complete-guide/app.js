@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const adminRoutes = require("./routes/admin");
-// const userRoutes = require("./routes/user");
+const userRoutes = require("./routes/user");
 const errorRoutes = require("./routes/error");
 
 const { connectMongo } = require("./app/Models/Database");
@@ -22,7 +22,7 @@ app.get("/favicon.ico", (req, res, next) => {
 });
 
 app.use('/admin/', adminRoutes);
-// app.use(userRoutes);
+app.use(userRoutes);
 app.use(errorRoutes);
 
 // start the app.

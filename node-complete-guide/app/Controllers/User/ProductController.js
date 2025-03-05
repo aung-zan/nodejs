@@ -19,7 +19,7 @@ exports.details = async (req, res, next) => {
   try {
     const id = req.params.productId;
 
-    const product = await Product.findByPk(id);
+    const product = await Product.findById(id);
 
     res.render("user/product/details.ejs", {
       title: "Product Details",
