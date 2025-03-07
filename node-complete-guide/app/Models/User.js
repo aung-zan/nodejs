@@ -1,23 +1,24 @@
-const Sequelize = require("sequelize");
-
-const sequelize = require("./Database");
-
-const User = sequelize.define("users", {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
-  },
-  name: Sequelize.STRING,
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false
+const { getDb } = require("./Database");
+class User {
+  constructor(name, email, password) {
+    this.name = name;
+    this.email = email;
+    this.password = password;
   }
-});
+
+  static async getByEmail(email) {
+    const db = getDb();
+
+    return db.collection("users")
+      .findOne({ email: email });
+  }
+
+  async store() {
+    const db = getDb();
+
+    await db.collection("users")
+      .insertOne(this);
+  }
+}
 
 module.exports = User;

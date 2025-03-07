@@ -24,9 +24,10 @@ exports.create = (req, res, next) => {
 
 exports.store = async (req, res, next) => {
   try {
+    const userId = req.user._id;
     const {title, price, description, imageUrl} = req.body;
 
-    const p = new Product(title, price, description, imageUrl);
+    const p = new Product(title, price, description, imageUrl, userId);
     await p.create();
 
     res.redirect("/admin/product");
@@ -55,11 +56,12 @@ exports.edit = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
+    const userId = req.user._id;
     const id = req.params.productId;
 
     const {title, price, description, imageUrl} = req.body;
 
-    const p = new Product(title, price, description, imageUrl);
+    const p = new Product(title, price, description, imageUrl, userId);
     await p.update(id);
 
     res.redirect("/admin/product");
