@@ -64,10 +64,10 @@ exports.details = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
+    const userId = req.user._id;
     const productId = req.body.productId;
 
-    const cart = await req.user.getCart();
-    await cart.removeProduct([productId]);
+    await User.delete(userId, productId);
 
     res.redirect("/cart");
   } catch (error) {

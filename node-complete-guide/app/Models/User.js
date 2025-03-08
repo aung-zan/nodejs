@@ -31,8 +31,6 @@ class User {
   }
 
   static async addToCart(userId, products) {
-    console.log(userId);
-
     const db = getDb();
     const items = {
       items: products
@@ -43,6 +41,16 @@ class User {
         { _id: userId },
         { $set: { cart: items } }
       );
+  }
+
+  static async delete(userId, productId) {
+    const db = getDb();
+
+    return db.collection("users")
+      .updateOne(
+        { _id: userId },
+        { $pull: { "cart.items": { productId: ObjectId.createFromHexString(productId) } } }
+      )
   }
 }
 
