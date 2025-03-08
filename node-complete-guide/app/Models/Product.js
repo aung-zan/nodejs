@@ -26,14 +26,22 @@ class Product {
     const db = getDb();
 
     return db.collection("products")
-      .findOne({ _id: new ObjectId(id) });
+      .findOne({ _id: ObjectId.createFromHexString(id) });
+  }
+
+  static async findManyByIds(ids) {
+    const db = getDb();
+
+    return db.collection("products")
+      .find( {_id: { $in: ids } } )
+      .toArray();
   }
 
   async update(id) {
     const db = getDb();
     return db.collection("products")
       .updateOne(
-        { _id: new ObjectId(id) },
+        { _id: ObjectId.createFromHexString(id) },
         { $set: this }
       );
   }
@@ -43,7 +51,7 @@ class Product {
 
     return db.collection("products")
       .deleteOne(
-        { _id: new ObjectId(id) }
+        { _id: ObjectId.createFromHexString(id) }
       );
   }
 }

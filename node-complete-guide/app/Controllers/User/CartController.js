@@ -1,28 +1,30 @@
+const { ObjectId } = require("mongodb");
+const User = require("../../Models/User");
 const Product = require("../../Models/Product");
 
 exports.create = async (req, res, next) => {
   try {
-    let cart;
-    let product;
-    let quantity;
+    let products;
+    const userId = req.user._id;
     const productId = req.body.productId;
+    const ObjectProductId = ObjectId.createFromHexString(productId);
 
-    cart = await req.user.getCart();
-    if (! cart) {
-      cart = await req.user.createCart();
-    }
+    const cart = await User.getCart(userId);
 
-    const products = await cart.getProducts({ where: { id: productId } });
+    if (cart?.items) {
+      products = cart.items;
+      const exitProduct = products.find(product => product.productId.equals(productId));
 
-    if (products.length > 0) {
-      product = products[0];
-      quantity = product.cartItem.quantity + 1;
+      if (exitProduct) {
+        exitProduct.quantity += 1;
+      } else {
+        products.push({ productId: ObjectProductId, quantity: 1 });
+      }
     } else {
-      product = await Product.findByPk(productId);
-      quantity = 1;
+      products = [{ productId: ObjectProductId, quantity: 1 }];
     }
 
-    await cart.addProduct(product, { through: { quantity: quantity } });
+    await User.addToCart(userId, products);
 
     res.redirect("/");
   } catch (error) {
@@ -33,17 +35,26 @@ exports.create = async (req, res, next) => {
 
 exports.details = async (req, res, next) => {
   try {
-    let products = [];
-    const cart = await req.user.getCart();
+    let productsInfo = [];
+    const userId = req.user._id;
 
-    if (cart) {
-      products = await cart.getProducts();
+    const cart = await User.getCart(userId);
+
+    if (cart?.items) {
+      const productIds = cart.items.map(item => item.productId);
+      const products = await Product.findManyByIds(productIds);
+
+      productsInfo = cart.items.map(item => (
+        {...item, info: products.find(product => {
+          return product._id.equals(item.productId);
+        })}
+      ));
     }
 
     res.render("user/cart/details.ejs", {
       title: "Cart Details",
       path: "/cart",
-      products: products
+      products: productsInfo
     });
   } catch (error) {
     console.error("Error fetching cart:", error);

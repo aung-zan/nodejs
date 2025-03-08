@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const { getDb } = require("./Database");
 class User {
   constructor(name, email, password) {
@@ -18,6 +19,30 @@ class User {
 
     await db.collection("users")
       .insertOne(this);
+  }
+
+  static async getCart(userId) {
+    const db = getDb();
+
+    const user = await db.collection("users")
+      .findOne({ _id: userId });
+
+    return user?.cart ?? {};
+  }
+
+  static async addToCart(userId, products) {
+    console.log(userId);
+
+    const db = getDb();
+    const items = {
+      items: products
+    };
+
+    return db.collection("users")
+      .updateOne(
+        { _id: userId },
+        { $set: { cart: items } }
+      );
   }
 }
 
