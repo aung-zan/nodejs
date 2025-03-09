@@ -67,7 +67,7 @@ exports.delete = async (req, res, next) => {
     const userId = req.user._id;
     const productId = req.body.productId;
 
-    await User.delete(userId, productId);
+    await User.deleteFromCart(userId, productId);
 
     res.redirect("/cart");
   } catch (error) {

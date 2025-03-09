@@ -43,13 +43,23 @@ class User {
       );
   }
 
-  static async delete(userId, productId) {
+  static async deleteFromCart(userId, productId) {
     const db = getDb();
 
     return db.collection("users")
       .updateOne(
         { _id: userId },
         { $pull: { "cart.items": { productId: ObjectId.createFromHexString(productId) } } }
+      )
+  }
+
+  static async emptyCart(userId) {
+    const db = getDb();
+
+    return db.collection("users")
+      .updateOne(
+        { _id: userId },
+        { $set: { cart: {} } }
       )
   }
 }

@@ -1,14 +1,25 @@
-const Sequelize = require("sequelize");
+const { getDb } = require("./Database");
 
-const sequelize = require("./Database");
-
-const Order = sequelize.define("orders", {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
+class Order {
+  constructor(items, userId) {
+    this.items = items
+    this.userId = userId
   }
-});
+
+  static async findAll(userId) {
+    const db = getDb();
+
+    return db.collection("orders")
+      .find({ userId: userId })
+      .toArray();
+  }
+
+  async create() {
+    const db = getDb();
+
+    return db.collection('orders')
+      .insertOne(this);
+  }
+}
 
 module.exports = Order;
