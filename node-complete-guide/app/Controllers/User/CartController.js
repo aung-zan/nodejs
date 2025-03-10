@@ -1,30 +1,12 @@
-const { ObjectId } = require("mongodb");
 const User = require("../../Models/User");
 const Product = require("../../Models/Product");
 
 exports.create = async (req, res, next) => {
   try {
-    let products;
-    const userId = req.user._id;
     const productId = req.body.productId;
-    const ObjectProductId = ObjectId.createFromHexString(productId);
+    const user = req.user;
 
-    const cart = await User.getCart(userId);
-
-    if (cart?.items) {
-      products = cart.items;
-      const exitProduct = products.find(product => product.productId.equals(productId));
-
-      if (exitProduct) {
-        exitProduct.quantity += 1;
-      } else {
-        products.push({ productId: ObjectProductId, quantity: 1 });
-      }
-    } else {
-      products = [{ productId: ObjectProductId, quantity: 1 }];
-    }
-
-    await User.addToCart(userId, products);
+    await user.addToCart(productId);
 
     res.redirect("/");
   } catch (error) {
@@ -35,21 +17,10 @@ exports.create = async (req, res, next) => {
 
 exports.details = async (req, res, next) => {
   try {
-    let productsInfo = [];
-    const userId = req.user._id;
+    const user = req.user;
 
-    const cart = await User.getCart(userId);
-
-    if (cart?.items) {
-      const productIds = cart.items.map(item => item.productId);
-      const products = await Product.findManyByIds(productIds);
-
-      productsInfo = cart.items.map(item => (
-        {...item, info: products.find(product => {
-          return product._id.equals(item.productId);
-        })}
-      ));
-    }
+    const products = await user.populate("cart.items.productId");
+    const productsInfo = products.cart.items;
 
     res.render("user/cart/details.ejs", {
       title: "Cart Details",
@@ -64,10 +35,11 @@ exports.details = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    const userId = req.user._id;
-    const productId = req.body.productId;
+    const user = req.user;
+    const _id = req.body.product_id;
 
-    await User.deleteFromCart(userId, productId);
+    await user.cart.items.id(_id).deleteOne();
+    await user.save();
 
     res.redirect("/cart");
   } catch (error) {
