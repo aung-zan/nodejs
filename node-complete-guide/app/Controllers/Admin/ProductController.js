@@ -2,7 +2,7 @@ const Product = require("../../Models/Product");
 
 exports.list = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
+    const products = await Product.find();
 
     res.render("admin/product/list.ejs", {
       title: "Product List",
@@ -25,10 +25,10 @@ exports.create = (req, res, next) => {
 exports.store = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const {title, price, description, imageUrl} = req.body;
+    const data = req.body;
 
-    const p = new Product(title, price, description, imageUrl, userId);
-    await p.create();
+    const product = new Product(data);
+    await product.save();
 
     res.redirect("/admin/product");
   } catch (error) {
@@ -58,11 +58,9 @@ exports.update = async (req, res, next) => {
   try {
     const userId = req.user._id;
     const id = req.params.productId;
+    const data = req.body;
 
-    const {title, price, description, imageUrl} = req.body;
-
-    const p = new Product(title, price, description, imageUrl, userId);
-    await p.update(id);
+    await Product.findByIdAndUpdate(id, data);
 
     res.redirect("/admin/product");
   } catch (error) {
