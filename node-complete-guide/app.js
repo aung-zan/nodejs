@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const adminRoutes = require("./routes/admin");
-const userRoutes = require("./routes/user");
+// const adminRoutes = require("./routes/admin");
+// const userRoutes = require("./routes/user");
 const errorRoutes = require("./routes/error");
 
 const { connectMongo } = require("./app/Models/Database");
@@ -18,20 +18,20 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: false}));
 
 // add userinfo in every requests. (not secure)
-app.use(async (req, res, next) => {
-  const user = await User.getByEmail("test@example.com");
-  req.user = user;
+// app.use(async (req, res, next) => {
+//   const user = await User.getByEmail("test@example.com");
+//   req.user = user;
 
-  next();
-});
+//   next();
+// });
 
 // register routes.
 app.get("/favicon.ico", (req, res, next) => {
   res.status(204).end();
 });
 
-app.use('/admin/', adminRoutes);
-app.use(userRoutes);
+// app.use('/admin/', adminRoutes);
+// app.use(userRoutes);
 app.use(errorRoutes);
 
 // start the app.
@@ -39,11 +39,11 @@ app.use(errorRoutes);
   try {
     await connectMongo();
 
-    const user = await User.getByEmail("test@example.com");
-    if (! user) {
-      const u = new User("Aung", "test@example.com", "password");
-      await u.store();
-    }
+    // const user = await User.getByEmail("test@example.com");
+    // if (! user) {
+    //   const u = new User("Aung", "test@example.com", "password");
+    //   await u.store();
+    // }
 
     app.listen(3000);
   } catch (error) {
