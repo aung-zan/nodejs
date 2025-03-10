@@ -5,6 +5,7 @@ const ProductSchema = Schema({
   price: { type: String, required: true },
   description: String,
   imageUrl: { type: String, required: true },
+  userId: { type: Schema.Types.ObjectId, ref: "users", required: true }
 });
 
 const Product = model('products', ProductSchema);
