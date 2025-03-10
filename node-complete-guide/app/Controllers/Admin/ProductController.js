@@ -73,7 +73,7 @@ exports.delete = async (req, res, next) => {
   try {
     const id = req.params.productId;
 
-    await Product.delete(id);
+    await Product.findByIdAndDelete(id);
 
     res.redirect("/admin/product");
   } catch (error) {
