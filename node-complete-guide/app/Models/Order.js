@@ -1,25 +1,15 @@
-const { getDb } = require("./Database");
+const { Schema, model } = require("mongoose");
 
-class Order {
-  constructor(items, userId) {
-    this.items = items
-    this.userId = userId
-  }
+const OrderSchema = Schema({
+  products: [
+    {
+      product: { type: Object, required: true },
+      quantity: { type: Number, required: true }
+    }
+  ],
+  userId: { type: Schema.Types.ObjectId, ref: "users", required: true }
+});
 
-  static async findAll(userId) {
-    const db = getDb();
-
-    return db.collection("orders")
-      .find({ userId: userId })
-      .toArray();
-  }
-
-  async create() {
-    const db = getDb();
-
-    return db.collection('orders')
-      .insertOne(this);
-  }
-}
+const Order = model("orders", OrderSchema);
 
 module.exports = Order;

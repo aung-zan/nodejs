@@ -5,10 +5,7 @@ const User = require("../../Models/User");
 exports.list = async (req, res, next) => {
   try {
     const userId = req.user._id;
-
-    const orders = await Order.findAll(userId);
-    console.log(orders);
-
+    const orders = await Order.find({ userId: userId });
 
     res.render("user/order/list.ejs", {
       title: "Order Details",
@@ -23,22 +20,21 @@ exports.list = async (req, res, next) => {
 
 exports.store = async (req, res, next) => {
   try {
+    const user = req.user;
     const userId = req.user._id;
-    const cart = await User.getCart(userId);
 
-    const cartProductId = cart?.items.map(item => item.productId);
-    const productInfo = await Product.findManyByIds(cartProductId);
+    const userCart = await user.populate("cart.items.productId");
+    const cartItems = userCart.cart.items.toObject();
 
-    const cartProducts = productInfo.map(product => (
-      {...product, quantity: cart?.items.find(item => (
-        item.productId.equals(product._id)
-      ))?.quantity}
+    const products = cartItems.map(product => (
+      {  product: product.productId, quantity: product.quantity }
     ));
 
-    const order = new Order(cartProducts, userId);
-    await order.create();
+    const order = new Order({ products: products, userId: userId });
+    await order.save();
 
-    await User.emptyCart(userId);
+    user.cart.items = [];
+    await user.save();
 
     res.redirect("/orders");
   } catch (error) {
