@@ -6,5 +6,7 @@ exports.login = (req, res, next) => {
 }
 
 exports.auth = (req, res, next) => {
-  console.log(req.body);
+  // console.log(req.body);
+  req.session.isLoggedIn = true;
+  res.redirect("/");
 }
