@@ -16,12 +16,14 @@
             <li class="main-header__item">
                 <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
             </li>
-            <!-- <li class="main-header__item">
-                <a class="<%= path === '/admin/product/create' ? 'active' : '' %>" href="/admin/product/create">Add Product</a>
-            </li>
-            <li class="main-header__item">
-                <a class="<%= path === '/admin/product' ? 'active' : '' %>" href="/admin/product">Admin Products</a>
-            </li> -->
+            <% if (sharedData.loggedIn) { %>
+                <li class="main-header__item">
+                    <a class="<%= path === '/admin/product/create' ? 'active' : '' %>" href="/admin/product/create">Add Product</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/admin/product' ? 'active' : '' %>" href="/admin/product">Admin Products</a>
+                </li>
+            <% } %>
         </ul>
         <ul class="main-header__item-list">
             <li class="main-header__item">
@@ -45,11 +47,19 @@
         <li class="main-header__item">
             <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
         </li>
+        <% if (sharedData.loggedIn) { %>
+            <li class="main-header__item">
+                <a class="<%= path === '/admin/product/create' ? 'active' : '' %>" href="/admin/product/create">Add Product</a>
+            </li>
+            <li class="main-header__item">
+                <a class="<%= path === '/admin/product' ? 'active' : '' %>" href="/admin/product">Admin Products</a>
+            </li>
+        <% } %>
+    </ul>
+
+    <ul class="mobile-nav__item-list">
         <li class="main-header__item">
-            <a class="<%= path === '/admin/product/create' ? 'active' : '' %>" href="/admin/product/create">Add Product</a>
-        </li>
-        <li class="main-header__item">
-            <a class="<%= path === '/admin/product' ? 'active' : '' %>" href="/admin/product">Admin Products</a>
+            <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
         </li>
     </ul>
 </nav>

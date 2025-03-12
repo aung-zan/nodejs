@@ -36,6 +36,15 @@ app.get("/favicon.ico", (req, res, next) => {
   res.status(204).end();
 });
 
+// share data to views.
+app.use((req, res, next) => {
+  res.locals.sharedData = {
+    loggedIn: req.session?.isLoggedIn || false
+  };
+
+  next();
+});
+
 app.use(userRoutes);
 app.use(authRouters);
 app.use("/admin/", (req, res, next) => {
