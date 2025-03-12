@@ -17,7 +17,7 @@ const app = express();
 const store = new MongoDBStore({
   uri: uri,
   collection: "sessions",
-  expires: 1000 * 5,
+  expires: 1000 * 60 * 60,
 });
 
 // make public path static.
@@ -32,12 +32,12 @@ app.use(
 );
 
 // add userinfo in every requests. (not secure)
-app.use(async (req, res, next) => {
-  const user = await User.findOne({ email: "test@example.com" });
-  req.user = user;
+// app.use(async (req, res, next) => {
+//   const user = await User.findOne({ email: "test@example.com" });
+//   req.user = user;
 
-  next();
-});
+//   next();
+// });
 
 // register routes.
 app.get("/favicon.ico", (req, res, next) => {
@@ -50,7 +50,6 @@ app.use("/admin/", (req, res, next) => {
   if (! req.session?.isLoggedIn) {
     return res.redirect("/login");
   }
-
   next();
 });
 app.use('/admin/', adminRoutes);

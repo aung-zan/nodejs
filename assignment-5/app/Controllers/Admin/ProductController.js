@@ -25,7 +25,7 @@ exports.create = (req, res, next) => {
 exports.store = async (req, res, next) => {
   try {
     const data = req.body;
-    data.userId = req.user;
+    data.userId = req.session?.user?._id;
 
     const product = new Product(data);
     await product.save();
@@ -58,7 +58,7 @@ exports.update = async (req, res, next) => {
   try {
     const id = req.params.productId;
     const data = req.body;
-    data.userId = req.user;
+    data.userId = req.session?.user?._id;
 
     await Product.findByIdAndUpdate(id, data);
 

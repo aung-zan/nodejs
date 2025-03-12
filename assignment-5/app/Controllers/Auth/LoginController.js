@@ -1,3 +1,5 @@
+const User = require("../../Models/User");
+
 exports.login = (req, res, next) => {
   if (req.session?.isLoggedIn) {
     return res.redirect("/admin/product");
@@ -9,12 +11,21 @@ exports.login = (req, res, next) => {
   });
 }
 
-exports.auth = (req, res, next) => {
+exports.auth = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  if (email === "test@example.com" && password === "password") {
-    req.session.credentials = { email: email, password: password };
+  const result = await User.findOne({
+    email: email,
+    password: password
+  });
+
+  if (result) {
+    req.session.user = {
+      _id: result._id,
+      name: result.name,
+      email: result.email,
+    }
     req.session.isLoggedIn = true;
 
     return res.redirect("/admin/product");
