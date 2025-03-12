@@ -16,7 +16,8 @@ const app = express();
 
 const store = new MongoDBStore({
   uri: uri,
-  collection: "sessions"
+  collection: "sessions",
+  expires: 1000 * 5,
 });
 
 // make public path static.
@@ -43,9 +44,16 @@ app.get("/favicon.ico", (req, res, next) => {
   res.status(204).end();
 });
 
-app.use('/admin/', adminRoutes);
-app.use(authRouters);
 app.use(userRoutes);
+app.use(authRouters);
+app.use("/admin/", (req, res, next) => {
+  if (! req.session?.isLoggedIn) {
+    return res.redirect("/login");
+  }
+
+  next();
+});
+app.use('/admin/', adminRoutes);
 app.use(errorRoutes);
 
 // start the app.
