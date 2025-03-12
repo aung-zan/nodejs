@@ -10,23 +10,33 @@
             <li class="main-header__item">
                 <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products</a>
             </li>
-            <li class="main-header__item">
-                <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
-            </li>
-            <li class="main-header__item">
-                <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
-            </li>
-            <li class="main-header__item">
-                <a class="<%= path === '/admin/product/create' ? 'active' : '' %>" href="/admin/product/create">Add Product</a>
-            </li>
-            <li class="main-header__item">
-                <a class="<%= path === '/admin/product' ? 'active' : '' %>" href="/admin/product">Admin Products</a>
-            </li>
+            <% if (sharedData.loggedIn) { %>
+                <li class="main-header__item">
+                    <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/admin/product/create' ? 'active' : '' %>" href="/admin/product/create">Add Product</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/admin/product' ? 'active' : '' %>" href="/admin/product">Admin Products</a>
+                </li>
+            <% } %>
         </ul>
         <ul class="main-header__item-list">
-            <li class="main-header__item">
-                <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
-            </li>
+            <% if (sharedData.loggedIn) { %>
+                <li class="main-header__item">
+                    <form action="/logout" method="post">
+                        <button type="submit" class="<%= path === '/login' ? 'active' : '' %>">Logout</button>
+                    </form>
+                </li>
+            <% } else { %>
+                <li class="main-header__item">
+                    <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+                </li>
+            <% } %>
         </ul>
     </nav>
 </header>
@@ -39,17 +49,32 @@
         <li class="main-header__item">
             <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products</a>
         </li>
-        <li class="main-header__item">
-            <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
-        </li>
-        <li class="main-header__item">
-            <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
-        </li>
-        <li class="main-header__item">
-            <a class="<%= path === '/admin/product/create' ? 'active' : '' %>" href="/admin/product/create">Add Product</a>
-        </li>
-        <li class="main-header__item">
-            <a class="<%= path === '/admin/product' ? 'active' : '' %>" href="/admin/product">Admin Products</a>
-        </li>
+        <% if (sharedData.loggedIn) { %>
+            <li class="main-header__item">
+                <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+            </li>
+            <li class="main-header__item">
+                <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
+            </li>
+            <li class="main-header__item">
+                <a class="<%= path === '/admin/product/create' ? 'active' : '' %>" href="/admin/product/create">Add Product</a>
+            </li>
+            <li class="main-header__item">
+                <a class="<%= path === '/admin/product' ? 'active' : '' %>" href="/admin/product">Admin Products</a>
+            </li>
+        <% } %>
+    </ul>
+
+    <ul class="mobile-nav__item-list">
+        <% if (sharedData.loggedIn) { %>
+            <li class="main-header__item">
+                <form action="/logout" method="post"></form>
+                <button type="submit" class="<%= path === '/login' ? 'active' : '' %>">Logout</button>
+            </li>
+        <% } else { %>
+            <li class="main-header__item">
+                <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+            </li>
+        <% } %>
     </ul>
 </nav>

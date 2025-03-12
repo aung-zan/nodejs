@@ -30,7 +30,10 @@
                             </div>
                             <div class="card__actions">
                                 <a href="/product/<%= product._id %>" class="btn">Details</a>
-                                <%- include('../../include/addToCart.ejs', {product: product}) %>
+
+                                <% if (sharedData.loggedIn) { %>
+                                    <%- include('../../include/addToCart.ejs', {product: product}) %>
+                                <% } %>
                             </div>
                         </article>
                     <% } %>

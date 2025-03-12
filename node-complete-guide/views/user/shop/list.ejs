@@ -28,9 +28,11 @@
                                     <%= product.description %>
                                 </p>
                             </div>
-                            <div class="card__actions">
-                                <%- include('../../include/addToCart.ejs', {product: product}) %>
-                            </div>
+                            <% if (sharedData.loggedIn) { %>
+                                <div class="card__actions">
+                                    <%- include('../../include/addToCart.ejs', {product: product}) %>
+                                </div>
+                            <% } %>
                         </article>
                     <% } %>
                 </div>

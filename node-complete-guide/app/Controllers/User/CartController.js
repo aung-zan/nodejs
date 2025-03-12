@@ -1,12 +1,14 @@
 const User = require("../../Models/User");
-const Product = require("../../Models/Product");
 
 exports.create = async (req, res, next) => {
   try {
     const productId = req.body.productId;
-    const user = req.user;
+    const userId = req.session?.user?._id;
 
-    await user.addToCart(productId);
+    if (userId) {
+      const user = await User.findOne({ _id: userId });
+      await user.addToCart(productId);
+    }
 
     res.redirect("/");
   } catch (error) {
@@ -17,10 +19,16 @@ exports.create = async (req, res, next) => {
 
 exports.details = async (req, res, next) => {
   try {
-    const user = req.user;
+    let productsInfo;
+    const userId = req.session?.user?._id;
 
-    const products = await user.populate("cart.items.productId");
-    const productsInfo = products.cart.items;
+    if (! userId) {
+      productsInfo = [];
+    } else {
+      const user = await User.findOne({ _id: userId });
+      const products = await user.populate("cart.items.productId");
+      productsInfo = products.cart.items;
+    }
 
     res.render("user/cart/details.ejs", {
       title: "Cart Details",
@@ -35,11 +43,14 @@ exports.details = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    const user = req.user;
+    const userId = req.session?.user?._id;
     const _id = req.body.product_id;
 
-    await user.cart.items.id(_id).deleteOne();
-    await user.save();
+    if (userId) {
+      const user = await User.findOne({ _id: userId });
+      await user.cart.items.id(_id).deleteOne();
+      await user.save();
+    }
 
     res.redirect("/cart");
   } catch (error) {
