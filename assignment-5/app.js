@@ -31,14 +31,6 @@ app.use(
   session({ secret: "my secret", resave: false, saveUninitialized: false, store: store })
 );
 
-// add userinfo in every requests. (not secure)
-// app.use(async (req, res, next) => {
-//   const user = await User.findOne({ email: "test@example.com" });
-//   req.user = user;
-
-//   next();
-// });
-
 // register routes.
 app.get("/favicon.ico", (req, res, next) => {
   res.status(204).end();
