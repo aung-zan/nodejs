@@ -1,3 +1,5 @@
+const bcryptjs = require("bcryptjs");
+
 const User = require("../../Models/User");
 
 exports.login = (req, res, next) => {
@@ -15,10 +17,7 @@ exports.auth = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  const result = await User.findOne({
-    email: email,
-    password: password
-  });
+  const result = await checkCredentials(email, password);
 
   if (result) {
     req.session.user = {
@@ -38,4 +37,20 @@ exports.logout = async (req, res, next) => {
   await req.session.destroy();
 
   res.redirect("/login");
+}
+
+const checkCredentials = async (email, password) => {
+  const user = await User.findOne({ email: email });
+
+  if (user) {
+    const hashPassword = user.password;
+
+    const result = await bcryptjs.compare(password, hashPassword);
+
+    if (result) {
+      return true;
+    }
+  }
+
+  return false;
 }
