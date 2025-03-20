@@ -10,7 +10,7 @@ exports.create = async (req, res, next) => {
       await user.addToCart(productId);
     }
 
-    res.redirect("/");
+    res.redirect("/cart");
   } catch (error) {
     console.error("Error creating cart:", error);
     res.status(500).send("Internal Server Error");
