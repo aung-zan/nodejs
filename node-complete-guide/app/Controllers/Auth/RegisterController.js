@@ -6,9 +6,13 @@ exports.signUp = (req, res, next) => {
     res.redirect("admin/product");
   }
 
+  let errorMessage = req.flash("error");
+  errorMessage = (errorMessage.length > 0) ? errorMessage[0] : '';
+
   res.render("auth/register.ejs", {
     path: "/register",
-    title: "Register"
+    title: "Register",
+    errorMessage: errorMessage
   });
 }
 
@@ -17,6 +21,13 @@ exports.register = async (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
+
+  const userExit = await User.findOne({ email: email });
+  if (userExit) {
+    req.flash("error", `An account with ${email} is already exist.`);
+
+    return res.redirect("/register");
+  }
 
   const hashPassword = await bcryptjs.hash(password, 12);
 

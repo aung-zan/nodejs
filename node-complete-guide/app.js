@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const falsh = require("connect-flash");
 
 const adminRoutes = require("./routes/admin");
 const authRouters = require("./routes/auth");
@@ -30,6 +31,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(
   session({ secret: "my secret", resave: false, saveUninitialized: false, store: store })
 );
+
+// for flash message
+app.use(falsh());
 
 // register routes.
 app.get("/favicon.ico", (req, res, next) => {

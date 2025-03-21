@@ -9,9 +9,13 @@ exports.login = (req, res, next) => {
     return res.redirect("/admin/product");
   }
 
+  let errorMessage = req.flash("error");
+  errorMessage = (errorMessage.length > 0) ? errorMessage[0] : '';
+
   res.render("auth/login.ejs", {
     path: "/login",
-    title: "Login"
+    title: "Login",
+    errorMessage: errorMessage
   });
 }
 
@@ -31,6 +35,8 @@ exports.auth = async (req, res, next) => {
 
     return res.redirect("/admin/product");
   }
+
+  req.flash("error", "Invalid email or password.")
 
   return res.redirect("/login");
 }
