@@ -9,7 +9,7 @@ const userRoutes = require("./routes/user");
 const errorRoutes = require("./routes/error");
 
 const { connectMongo, uri } = require("./app/Models/Database");
-const User = require("./app/Models/User");
+const AuthMiddleware = require("./app/Middlewares/AuthMiddleware");
 
 // initialize the app.
 const app = express();
@@ -45,27 +45,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(userRoutes);
 app.use(authRouters);
-app.use("/admin/", (req, res, next) => {
-  if (! req.session?.isLoggedIn) {
-    return res.redirect("/login");
-  }
-  next();
-});
-app.use('/admin/', adminRoutes);
+app.use(userRoutes);
+app.use("/admin/", AuthMiddleware, adminRoutes);
 app.use(errorRoutes);
 
 // start the app.
 (async () => {
   try {
     await connectMongo();
-
-    const user = await User.findOne({ email: "test@example.com" });
-    if (! user) {
-      const user = new User({ name: "Aung", email: "test@example.com", password: "password" });
-      await user.save();
-    }
 
     app.listen(3000);
   } catch (error) {

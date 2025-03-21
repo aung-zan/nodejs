@@ -2,6 +2,8 @@ const bcryptjs = require("bcryptjs");
 
 const User = require("../../Models/User");
 
+let user;
+
 exports.login = (req, res, next) => {
   if (req.session?.isLoggedIn) {
     return res.redirect("/admin/product");
@@ -21,9 +23,9 @@ exports.auth = async (req, res, next) => {
 
   if (result) {
     req.session.user = {
-      _id: result._id,
-      name: result.name,
-      email: result.email,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
     }
     req.session.isLoggedIn = true;
 
@@ -40,7 +42,7 @@ exports.logout = async (req, res, next) => {
 }
 
 const checkCredentials = async (email, password) => {
-  const user = await User.findOne({ email: email });
+  user = await User.findOne({ email: email });
 
   if (user) {
     const hashPassword = user.password;
