@@ -2,7 +2,8 @@ const Product = require("../../Models/Product");
 
 exports.list = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const userId = req.session?.user?._id;
+    const products = await Product.find({ userId: userId });
 
     res.render("admin/product/list.ejs", {
       title: "Product List",
@@ -39,9 +40,21 @@ exports.store = async (req, res, next) => {
 
 exports.edit = async (req, res, next) => {
   try {
+    const userId = req.session?.user?._id;
     const id = req.params.productId;
 
-    const product = await Product.findById(id);
+    const product = await Product.findOne({
+      _id: id,
+      userId: userId
+    });
+
+    if (! product) {
+      res.status(404).render("404.ejs", {
+        title: "Error",
+        path: "",
+        content: "404 Not Found."
+      });
+    }
 
     res.render("admin/product/edit.ejs", {
       title: "Edit Product",
@@ -56,9 +69,19 @@ exports.edit = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
+    const userId = req.session?.user?._id;
     const id = req.params.productId;
     const data = req.body;
-    data.userId = req.session?.user?._id;
+    data.userId = userId;
+
+    const product = await Product.findOne({
+      _id: id,
+      userId: userId
+    });
+
+    if (! product) {
+      res.status(403).send("Forbidden");
+    }
 
     await Product.findByIdAndUpdate(id, data);
 
@@ -71,7 +94,17 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
+    const userId = req.session?.user?._id;
     const id = req.params.productId;
+
+    const product = await Product.findOne({
+      _id: id,
+      userId: userId
+    });
+
+    if (! product) {
+      res.status(403).send("Forbidden");
+    }
 
     await Product.findByIdAndDelete(id);
 
