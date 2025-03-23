@@ -1,5 +1,6 @@
 const bcryptjs = require("bcryptjs");
 const User = require("../../Models/User");
+const { sendMail } = require("../../Services/Mail");
 
 exports.signUp = (req, res, next) => {
   if (req.session?.isLoggedIn) {
@@ -33,6 +34,10 @@ exports.register = async (req, res, next) => {
 
   const user = new User({ name: name, email: email, password: hashPassword });
   await user.save();
+
+  const text = `<h1>The email address, ${email} is successfully registered.</h1>`;
+
+  sendMail("nightkiller10@gmail.com", "Node.js Tutorial", text);
 
   res.redirect("/login");
 }
