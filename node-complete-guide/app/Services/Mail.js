@@ -23,13 +23,31 @@ const transport = nodeMailer.createTransport({
   auth: AUTH
 });
 
-const sendMail = (to, subject, text) => {
+const sendMail = (to, subject, text, html) => {
+  const mailOptions = {
+    from: SENDER,
+    subject: subject,
+    category: "Integration Test",
+    sandbox: true
+  };
+
   let toAddresses = [];
 
   if (Array.isArray(to)) {
     toAddresses = to;
   } else {
     toAddresses.push(to);
+  }
+
+  mailOptions.to = toAddresses;
+
+  if (text) {
+    mailOptions.text = text;
+  }
+
+  if (html) {
+    console.log("html");
+    mailOptions.html = html;
   }
 
   try {
