@@ -6,7 +6,7 @@ const UserSchema = Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   resetToken: String,
-  resetTokenExpire: String,
+  resetTokenExpire: Date,
   cart: {
     items: [
       {

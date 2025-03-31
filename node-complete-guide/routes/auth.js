@@ -15,7 +15,7 @@ router.get("/forgot-password", forgotPassword);
 
 router.post("/forgot-password", forgot);
 
-router.get("/reset-password", resetPassword);
+router.get("/reset-password/:token", resetPassword);
 
 router.post("/reset-password", reset);
 
