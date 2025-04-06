@@ -27,8 +27,6 @@ const auth = async (req, res, next) => {
       return res.redirect('/login');
     }
 
-    console.log(user);
-
     const result = await bcrypt.compare(password, user.password);
     if (! result) {
       req.flash('error', `An email or password is incorrect.`);

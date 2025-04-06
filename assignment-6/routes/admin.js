@@ -8,7 +8,7 @@ routes.get('/products', list);
 routes.get('/product/create', create);
 routes.post('/product', store);
 routes.get('/product/:id/edit', edit);
-routes.post('/product/:id/edit', update);
+routes.post('/product/:id', update);
 routes.post('/product/:id/delete', destory);
 
 module.exports = routes;
