@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const Product = require("./Product");
+const Product = require('./Product');
 
 const UserSchema = Schema({
   name: { type: String, required: true },
@@ -17,7 +17,7 @@ const UserSchema = Schema({
   }
 });
 
-UserSchema.methods.addToCart = function (productId) {
+UserSchema.methods.addToCart = async function (productId) {
   let products;
   const cart = this.cart;
 
@@ -40,7 +40,7 @@ UserSchema.methods.addToCart = function (productId) {
 
   this.cart = updatedCart;
 
-  return this.save();
+  return await this.save();
 };
 
 UserSchema.methods.getCartItems = async function () {
@@ -48,15 +48,14 @@ UserSchema.methods.getCartItems = async function () {
   const productIds = cart.map(item => item.productId);
   const products = await Product.find({ _id: { $in: productIds } });
 
-  const cartItems = cart.map(item => {
-    item.info = products.find(product => (
-      product._id.equals(item.productId)
-    ));
+  return cart.map(item => {
+    const productInfo = products.find(product => product._id.equals(item.productId));;
 
-    return item;
+    return {
+      ...item.toObject(),
+      info: productInfo
+    };
   });
-
-  return cartItems;
 }
 
 const User = model("users", UserSchema);

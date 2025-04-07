@@ -6,6 +6,10 @@
     <%- include('../../include/navigation.ejs') %>
 
         <main>
+            <% if (errorMessage) { %>
+                <div class="user-message user-message--error"><%= errorMessage %></div>
+            <% } %>
+
             <% if (products.length <= 0) { %>
                 <h1>No Products Found!</h1>
             <% } else { %>
@@ -31,7 +35,7 @@
                             <div class="card__actions">
                                 <a href="/product/<%= product._id %>" class="btn">Details</a>
 
-                                <% if (sharedData.loggedIn) { %>
+                                <% if (sharedData.authenticated) { %>
                                     <%- include('../../include/addToCart.ejs', {product: product}) %>
                                 <% } %>
                             </div>

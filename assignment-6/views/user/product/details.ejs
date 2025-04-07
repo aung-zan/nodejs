@@ -13,7 +13,7 @@
         <h2><%= product.price %></h2>
         <p><%= product.description %></p>
 
-        <% if (sharedData.loggedIn) { %>
+        <% if (sharedData.authenticated) { %>
             <%- include('../../include/addToCart.ejs', {product: product}) %>
         <% } %>
     </main>

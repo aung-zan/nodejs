@@ -29,6 +29,14 @@ const findBy = async (email) => {
   }
 }
 
+const findById = async (_id) => {
+  try {
+    return await User.findOne({ _id });
+  } catch (error) {
+    throw new Error(`Failed to find user: ${error.message}`);
+  }
+}
+
 const update = async (id, data) => {
   try {
     return await User.findByIdAndUpdate(id, data, { new: true });
@@ -45,4 +53,4 @@ const destroy = async (id) => {
   }
 }
 
-module.exports = { findAll, save, findBy, update, destroy };
+module.exports = { findAll, save, findBy, findById, update, destroy };
