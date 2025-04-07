@@ -1,8 +1,12 @@
 const Product = require('../../models/Product');
 
-const findAll = async () => {
+const findAll = async (userId) => {
   try {
-    return await Product.find({});
+    const options = {};
+
+    if (userId) options.userId = userId;
+
+    return await Product.find(options);
   } catch (error) {
     throw new Error(`Failed to fetch products: ${error.message}`);
   }
@@ -17,9 +21,13 @@ const save = async (data) => {
   }
 }
 
-const findBy = async (_id) => {
+const findBy = async (_id, userId) => {
   try {
-    return await Product.findOne({ _id });
+    const options = { _id: _id };
+
+    if (userId) options.userId = userId;
+
+    return await Product.findOne(options);
   } catch (error) {
     throw new Error(`Failed to fetch product: ${error.message}`);
   }

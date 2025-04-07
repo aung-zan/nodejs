@@ -1,7 +1,8 @@
 const productRepo = require('../../Repositories/ProductRepository');
 
 const list = async (req, res, next) => {
-  const products = await productRepo.findAll();
+  const userId = req.session?.user?._id;
+  const products = await productRepo.findAll(userId);
 
   return res.render("admin/product/list.ejs", {
     title: "Admin Products",
@@ -27,8 +28,11 @@ const store = async (req, res, next) => {
 }
 
 const edit = async (req, res, next) => {
+  const userId = req.session?.user?._id;
   const productId = req.params.id;
-  const product = await productRepo.findBy(productId);
+
+  const product = await productRepo.findBy(productId, userId);
+  if (! product) return res.redirect('/404');
 
   return res.render('admin/product/edit.ejs', {
     title: 'Admin Edit Product',
@@ -38,8 +42,12 @@ const edit = async (req, res, next) => {
 }
 
 const update = async (req, res, next) => {
+  const userId = req.session?.user?._id;
   const productId = req.params.id;
   const data = req.body;
+
+  const product = await productRepo.findBy(productId, userId);
+  if (! product) return res.redirect('/404');
 
   await productRepo.update(productId, data);
 
