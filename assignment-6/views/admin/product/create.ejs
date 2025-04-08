@@ -7,6 +7,16 @@
     <%- include("../../include/navigation.ejs") %>
 
     <main>
+        <% if (errorMessage) { %>
+            <div class="user-message user-message--error">
+                <ul>
+                    <% for (let error of errorMessage) { %>
+                        <li><%= error %></li>
+                    <% } %>
+                </ul>
+            </div>
+        <% } %>
+
         <form class="product-form" action="/admin/product" method="POST">
             <div class="form-control">
                 <label for="title">Title</label>

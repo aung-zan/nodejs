@@ -12,9 +12,13 @@ const list = async (req, res, next) => {
 }
 
 const create = (req, res, next) => {
+  let errorMessage = req.flash('error');
+  errorMessage = (errorMessage.length > 0) ? errorMessage : '';
+
   return res.render('admin/product/create.ejs', {
     title: 'Admin Create Product',
     path: '/admin/product/create',
+    errorMessage: errorMessage
   });
 }
 
