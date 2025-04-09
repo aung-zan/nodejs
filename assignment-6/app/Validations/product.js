@@ -9,7 +9,9 @@ const validation = [
   body('price')
     .trim()
     .notEmpty()
-    .withMessage('The price field is required.'),
+    .withMessage('The price field is required.')
+    .isNumeric()
+    .withMessage('This price field accepts only numeric value.'),
 
   body('description')
     .trim()
@@ -22,13 +24,15 @@ const validation = [
     .withMessage('The Image URL field is required.'),
 ];
 
-const validate = (req, res) => {
+const validate = (req, res, next) => {
   const error = validationResult(req);
 
   if (! error.isEmpty()) {
     req.flash('error', error.array().map(err => err.msg));
     return res.redirect('/admin/product/create');
   }
+
+  next();
 }
 
 module.exports = {

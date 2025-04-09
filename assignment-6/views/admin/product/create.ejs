@@ -9,11 +9,9 @@
     <main>
         <% if (errorMessage) { %>
             <div class="user-message user-message--error">
-                <ul>
-                    <% for (let error of errorMessage) { %>
-                        <li><%= error %></li>
-                    <% } %>
-                </ul>
+                <% for (let error of errorMessage) { %>
+                    <div><%= error %></div>
+                <% } %>
             </div>
         <% } %>
 

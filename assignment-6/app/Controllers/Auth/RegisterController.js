@@ -2,7 +2,7 @@ const userRepo = require('../../Repositories/UserRepository');
 
 const register = (req, res, next) => {
   let errorMessage = req.flash('error');
-  errorMessage = (errorMessage.length > 0) ? errorMessage[0] : '';
+  errorMessage = (errorMessage.length > 0) ? errorMessage : '';
 
   res.render('auth/register.ejs', {
     path: '/register',
@@ -14,11 +14,6 @@ const register = (req, res, next) => {
 const signUp = async (req, res, next) => {
   try {
     const {name, email, password} = req.body;
-
-    if (!name || !email || !password) {
-      req.flash('error', 'Please add name, email and password.');
-      return res.redirect('/register');
-    }
 
     const user = await userRepo.findBy(email);
     if (user) {
