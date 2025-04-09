@@ -10,9 +10,9 @@ exports.login = (req, res, next) => {
   }
 
   let errorMessage = req.flash("error");
-  errorMessage = (errorMessage.length > 0) ? errorMessage[0] : '';
+  errorMessage = (errorMessage.length > 0) ? errorMessage : '';
 
-  res.render("auth/login.ejs", {
+  return res.render("auth/login.ejs", {
     path: "/login",
     title: "Login",
     errorMessage: errorMessage
@@ -32,6 +32,14 @@ exports.auth = async (req, res, next) => {
       email: user.email,
     }
     req.session.isLoggedIn = true;
+
+    await new Promise((resolve, reject) => {
+      req.session.save((err) => {
+        if (err) reject(err);
+
+        resolve();
+      });
+    });
 
     return res.redirect("/admin/product");
   }

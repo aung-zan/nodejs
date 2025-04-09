@@ -17,9 +17,13 @@ exports.list = async (req, res, next) => {
 }
 
 exports.create = (req, res, next) => {
+  let errorMessage = req.flash("error");
+  errorMessage = (errorMessage.length > 0) ? errorMessage : '';
+
   res.render("admin/product/create.ejs", {
     title: "Add Product",
-    path: "/admin/product/create"
+    path: "/admin/product/create",
+    errorMessage: errorMessage
   });
 }
 

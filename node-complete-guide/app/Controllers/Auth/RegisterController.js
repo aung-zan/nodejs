@@ -8,9 +8,9 @@ exports.signUp = (req, res, next) => {
   }
 
   let errorMessage = req.flash("error");
-  errorMessage = (errorMessage.length > 0) ? errorMessage[0] : '';
+  errorMessage = (errorMessage.length > 0) ? errorMessage : '';
 
-  res.render("auth/register.ejs", {
+  return res.render("auth/register.ejs", {
     path: "/register",
     title: "Register",
     errorMessage: errorMessage

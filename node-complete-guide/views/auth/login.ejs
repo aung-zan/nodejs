@@ -7,7 +7,11 @@
     <%- include('../include/navigation.ejs') %>
     <main>
         <% if (errorMessage) { %>
-            <div class="user-message user-message--error"><%= errorMessage %></div>
+            <div class="user-message user-message--error">
+                <% for (let error of errorMessage) { %>
+                    <div><%= error %></div>
+                <% } %>
+            </div>
         <% } %>
 
         <form class="login-form" action="/login" method="POST">
