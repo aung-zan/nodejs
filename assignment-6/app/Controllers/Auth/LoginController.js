@@ -6,7 +6,7 @@ const login = (req, res, next) => {
   let errorMessage = req.flash('error');
   errorMessage = (errorMessage.length > 0) ? errorMessage : '';
 
-  res.render('auth/login.ejs', {
+  return res.render('auth/login.ejs', {
     path: '/login',
     title: 'Login',
     errorMessage: errorMessage
@@ -18,12 +18,7 @@ const auth = async (req, res, next) => {
     const {email, password} = req.body;
 
     const user = await userRepo.findBy(email);
-    if (! user) {
-      req.flash('error', `${email} is not registered.`);
-      return res.redirect('/login');
-    }
-
-    const result = await bcrypt.compare(password, user.password);
+    const result = await bcrypt.compare(password, user?.password);
     if (! result) {
       req.flash('error', `An email or password is incorrect.`);
       return res.redirect('/login');

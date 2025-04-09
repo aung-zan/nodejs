@@ -23,7 +23,7 @@ const validate = (req, res, next) => {
 
   if (! errors.isEmpty()) {
     req.flash('error', errors.array().map(err => err.msg));
-    res.redirect('/login');
+    return res.redirect('/login');
   }
   next();
 }
