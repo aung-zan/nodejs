@@ -1,5 +1,6 @@
 const express = require('express');
 
+const { loginValidation } = require('../app/Validations/login');
 const { registerValidation } = require('../app/Validations/register');
 
 const { login, auth, logout } = require('../app/Controllers/Auth/LoginController');
@@ -9,7 +10,7 @@ const { forgotPassword, passwordForgot, resetPassword, passwordReset } = require
 const routes = express.Router();
 
 routes.get('/login', login);
-routes.post('/login', auth);
+routes.post('/login', loginValidation, auth);
 routes.post('/logout', logout);
 
 routes.get('/register', register);
