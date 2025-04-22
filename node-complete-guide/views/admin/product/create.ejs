@@ -14,14 +14,15 @@
                 <% } %>
             </div>
         <% } %>
-        <form class="product-form" action="/admin/product" method="POST">
+        <form class="product-form" action="/admin/product" enctype="multipart/form-data" method="POST">
             <div class="form-control">
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" autocomplete="off">
             </div>
             <div class="form-control">
-                <label for="imageUrl">Image URL</label>
-                <input type="text" name="imageUrl" id="imageUrl">
+                <label for="imageUrl">Image</label>
+                <!-- <input type="text" name="imageUrl" id="imageUrl"> -->
+                <input type="file" name="file_upload" id="file_upload">
             </div>
             <div class="form-control">
                 <label for="price">Price</label>

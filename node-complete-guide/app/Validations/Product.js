@@ -18,10 +18,10 @@ const validations = [
     .notEmpty()
     .withMessage('The description field is required.'),
 
-  body('imageUrl')
-    .trim()
-    .notEmpty()
-    .withMessage('The Image URL field is required.'),
+  // body('imageUrl')
+  //   .trim()
+  //   .notEmpty()
+  //   .withMessage('The Image URL field is required.'),
 ];
 
 const validate = (req, res, next) => {

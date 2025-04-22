@@ -1,3 +1,6 @@
+const path = require("path");
+const fs = require("fs/promises");
+
 const getMaxId = (records) => {
   if (records.length <= 0) {
     return 0;
@@ -17,5 +20,10 @@ const delay = () => {
   });
 }
 
-exports.getMaxId = getMaxId;
-exports.delay = delay;
+const deleteImage = async (imageName) => {
+  const imagePath = path.join("./public/images/", imageName);
+
+  return await fs.unlink(imagePath);
+}
+
+module.exports = { getMaxId, delay, deleteImage };

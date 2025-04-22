@@ -7,14 +7,22 @@
     <%- include("../../include/navigation.ejs") %>
 
     <main>
-        <form class="product-form" action="/admin/product/<%= product._id %>" method="POST">
+        <form class="product-form" action="/admin/product/<%= product._id %>" enctype="multipart/form-data" method="POST">
+            <input type="hidden" name="imageName" value="<%= product.imageName %>">
+
             <div class="form-control">
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" autocomplete="off" value="<%= product.title %>">
             </div>
+            <div class="card__image">
+                <label for="imageUrl">Current Image</label>
+                <br>
+                <img src="/images/<%= product.imageName %>" alt="<%= product.title %>">
+            </div>
             <div class="form-control">
-                <label for="imageUrl">Image URL</label>
-                <input type="text" name="imageUrl" id="imageUrl" value="<%= product.imageUrl %>">
+                <label for="imageUrl">Upload New Image</label>
+                <!-- <input type="text" name="imageUrl" id="imageUrl" value="<%= product.imageUrl %>"> -->
+                <input type="file" name="file_upload" id="file_upload">
             </div>
             <div class="form-control">
                 <label for="price">Price</label>

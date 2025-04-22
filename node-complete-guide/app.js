@@ -3,6 +3,9 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const falsh = require("connect-flash");
+const fileUpload = require("multer");
+
+const { storage, filter } = require("./config/upload");
 
 const adminRoutes = require("./routes/admin");
 const authRouters = require("./routes/auth");
@@ -15,11 +18,15 @@ const AuthMiddleware = require("./app/Middlewares/AuthMiddleware");
 // initialize the app.
 const app = express();
 
+// session config
 const store = new MongoDBStore({
   uri: uri,
   collection: "sessions",
   expires: 1000 * 60 * 60,
 });
+app.use(
+  session({ secret: "my secret", resave: false, saveUninitialized: false, store: store })
+);
 
 // make public path static.
 app.use(express.static("public"));
@@ -27,13 +34,14 @@ app.use(express.static("public"));
 // get request body properly.
 app.use(bodyParser.urlencoded({extended: false}));
 
-// session config
-app.use(
-  session({ secret: "my secret", resave: false, saveUninitialized: false, store: store })
-);
-
 // for flash message
 app.use(falsh());
+
+// file upload
+app.use(fileUpload({
+  storage: storage,
+  fileFilter: filter
+}).single('file_upload'));
 
 // register routes.
 app.get("/favicon.ico", (req, res, next) => {

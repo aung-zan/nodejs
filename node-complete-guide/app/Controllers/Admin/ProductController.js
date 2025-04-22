@@ -1,5 +1,7 @@
 const Product = require("../../Models/Product");
 
+const { deleteImage } = require("../../../utils/Helper");
+
 exports.list = async (req, res, next) => {
   try {
     const userId = req.session?.user?._id;
@@ -29,21 +31,30 @@ exports.create = (req, res, next) => {
 
 exports.store = async (req, res, next) => {
   try {
+    if (! req.file) {
+      return res.redirect("/admin/product/create");
+    }
+
     const data = req.body;
     data.userId = req.session?.user?._id;
+    data.imageName = req.file.filename;
+    data.originalImageName = req.file.originalname;
 
     const product = new Product(data);
     await product.save();
 
-    res.redirect("/admin/product");
+    return res.redirect("/admin/product");
   } catch (error) {
     console.error("Error creating product:", error);
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 }
 
 exports.edit = async (req, res, next) => {
   try {
+    let errorMessage = req.flash("error");
+    errorMessage = (errorMessage.length > 0) ? errorMessage : '';
+
     const userId = req.session?.user?._id;
     const id = req.params.productId;
 
@@ -53,21 +64,22 @@ exports.edit = async (req, res, next) => {
     });
 
     if (! product) {
-      res.status(404).render("404.ejs", {
+      return res.status(404).render("404.ejs", {
         title: "Error",
         path: "",
         content: "404 Not Found."
       });
     }
 
-    res.render("admin/product/edit.ejs", {
+    return res.render("admin/product/edit.ejs", {
       title: "Edit Product",
       path: "/admin/product",
-      product: product
+      product: product,
+      errorMessage: errorMessage
     });
   } catch (error) {
     console.error("Error fetching product:", error);
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 }
 
@@ -77,6 +89,13 @@ exports.update = async (req, res, next) => {
     const id = req.params.productId;
     const data = req.body;
     data.userId = userId;
+
+    if (req?.file) {
+      await deleteImage(data.imageName);
+
+      data.imageName = req.file.filename;
+      data.originalImageName = req.file.originalname;
+    }
 
     const product = await Product.findOne({
       _id: id,
