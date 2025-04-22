@@ -19,5 +19,6 @@ routes.post("/cart/delete", AuthMiddleware, CartController.delete);
 
 routes.get("/orders", AuthMiddleware, OrderController.list);
 routes.post("/order", AuthMiddleware, OrderController.store);
+routes.get("/orders/:orderId", AuthMiddleware, OrderController.download);
 
 module.exports = routes;

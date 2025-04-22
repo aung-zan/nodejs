@@ -1,5 +1,6 @@
 const Order = require("../../Models/Order");
 const User = require("../../Models/User");
+const { generatePdf } = require("../../Services/Invoice");
 
 exports.list = async (req, res, next) => {
   try {
@@ -50,4 +51,27 @@ exports.store = async (req, res, next) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+exports.download = async (req, res, next) => {
+  try {
+    const orderId = req.params?.orderId;
+    const userId = req.session?.user._id;
+
+    const order = await Order.findOne({ _id: orderId });
+
+    if (! order) {
+      req.flash("error", "Order not found.");
+      return res.redirect("/orders");
+    }
+
+    // if (order.userId != userId) {
+    //   req.flash("error", "Cannot access order.");
+    //   return res.redirect("/orders");
+    // }
+
+    generatePdf(order, res);
+  } catch (error) {
+
+  }
+}
 
