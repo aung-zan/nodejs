@@ -64,10 +64,10 @@ exports.download = async (req, res, next) => {
       return res.redirect("/orders");
     }
 
-    // if (order.userId != userId) {
-    //   req.flash("error", "Cannot access order.");
-    //   return res.redirect("/orders");
-    // }
+    if (! order.userId.equals(userId)) {
+      req.flash("error", "Cannot access order.");
+      return res.redirect("/orders");
+    }
 
     generatePdf(order, res);
   } catch (error) {

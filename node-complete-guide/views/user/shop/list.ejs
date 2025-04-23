@@ -38,6 +38,16 @@
                         </article>
                     <% } %>
                 </div>
+
+                <div class="pagination">
+                    <% if (prevPage !== 0) { %>
+                        <a href="?page=<%= prevPage %>"><</a>
+                    <% } %>
+                    <a href="?page=<%= currentPage %>" class="active"><%= currentPage %></a>
+                    <% if (nextPage !== 0) { %>
+                        <a href="?page=<%= currentPage + 1 %>">></a>
+                    <% } %>
+                </div>
             <% } %>
         </main>
 
