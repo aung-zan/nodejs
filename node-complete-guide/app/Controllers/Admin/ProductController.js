@@ -2,6 +2,8 @@ const Product = require("../../Models/Product");
 
 const { deleteImage } = require("../../../utils/Helper");
 
+const RESPONSE = { status: "success" };
+
 exports.list = async (req, res, next) => {
   try {
     const userId = req.session?.user?._id;
@@ -126,12 +128,19 @@ exports.delete = async (req, res, next) => {
     });
 
     if (! product) {
-      res.status(403).send("Forbidden");
+      RESPONSE.status = "failed";
+      RESPONSE.message = "Forbidden";
+
+      res.status(403).json(RESPONSE);
     }
+
+    await deleteImage(product.imageName);
 
     await Product.findByIdAndDelete(id);
 
-    res.redirect("/admin/product");
+    RESPONSE.message = "Successfully deleted.";
+
+    return res.status(200).json(RESPONSE);
   } catch (error) {
     console.error("Error deleting product:", error);
     res.status(500).send("Internal Server Error");

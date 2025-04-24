@@ -31,14 +31,17 @@
                         <div class="card__actions">
                             <a href="/admin/product/<%= product._id %>/edit" class="btn">Edit</a>
 
-                            <form action="/admin/product/<%= product._id %>/delete" method="POST">
-                               <button class="btn" type="submit">Delete</button>
-                            </form>
+                            <!-- <form action="/admin/product/<%= product._id %>/delete" method="POST">
+                            </form> -->
+                            <input type="hidden" value="<%= product._id %>">
+                            <button class="btn delete" type="button">Delete</button>
                         </div>
                     </article>
                 <% } %>
             </div>
         <% } %>
     </main>
+
+    <script src="/js/product.js"></script>
 
     <%- include("../../include/end.ejs") %>

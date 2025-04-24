@@ -15,6 +15,8 @@ routes.get('/product/:productId/edit', ProductController.edit);
 
 routes.post('/product/:productId', ProductController.update);
 
-routes.post('/product/:productId/delete', ProductController.delete);
+// routes.post('/product/:productId/delete', ProductController.delete);
+
+routes.delete('/product/:productId', ProductController.delete);
 
 module.exports = routes;
