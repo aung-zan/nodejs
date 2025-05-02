@@ -13,10 +13,6 @@ const app = express();
 // need config cors
 app.use(cors());
 app.use(bodyParser.json());
-app.use(imageUpload({
-  storage: diskStorage
-}).single('image'));
-
 app.use(userRoutes);
 
 (
