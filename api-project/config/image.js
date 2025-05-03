@@ -1,5 +1,6 @@
 const multer = require('multer');
 
+// allow image types.
 const imageTypes = [
   'image/png', 'image/jpg', 'image/jpeg'
 ];

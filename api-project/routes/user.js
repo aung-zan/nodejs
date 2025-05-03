@@ -6,6 +6,7 @@ const profile = require('../app/Controllers/profile');
 const post = require('../app/Controllers/post');
 
 const { imageUpload } = require('../config/image');
+const userValidator = require('../app/Validations/user');
 const postValidator = require('../app/Validations/post');
 
 const Router = express.Router();
@@ -13,10 +14,10 @@ const Router = express.Router();
 Router.post('/login', auth.login);
 Router.get('/forgot-password', auth.forgotPassword);
 Router.get('/reset-password', auth.resetPassword);
-Router.post('/register', register.register);
+Router.post('/register', userValidator.validator, register.register);
 
 Router.get('/profile/:userId', profile.details);
-Router.put('/profile/:userId', profile.update);
+Router.put('/profile/:userId', userValidator.validator, profile.update);
 
 Router.get('/posts/', post.list);
 Router.post(

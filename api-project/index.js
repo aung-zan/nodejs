@@ -1,10 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const imageUpload = require('multer');
 
 const { connectMongoDB } = require('./config/database');
-const { diskStorage } = require('./config/image');
 
 const userRoutes = require('./routes/user');
 
