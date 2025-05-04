@@ -9,13 +9,13 @@ exports.details = async (req, res, next) => {
     const user = await User.findOne({ _id: userId });
     if (! user) {
       return res.status(404).json({
-        status: 'failed',
+        success: false,
         message: 'Not Found.'
       });
     }
 
     return res.status(200).json({
-      status: 'success',
+      success: true,
       data: user
     });
   } catch (error) {
@@ -35,7 +35,7 @@ exports.update = async (req, res, next) => {
     const user = await User.findOne({ _id: userId });
     if (! user) {
       return res.status(404).json({
-        status: 'failed',
+        success: false,
         message: 'Not found.'
       });
     }
@@ -44,7 +44,7 @@ exports.update = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(userId, data, { new: true });
 
     return res.status(200).json({
-      status: 'success',
+      success: true,
       message: 'successfully updated.',
       data: updatedUser
     });

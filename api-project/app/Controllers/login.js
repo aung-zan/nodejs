@@ -3,7 +3,7 @@ const User = require('../Models/User');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-const RESPONSE = { status: 'success' };
+const RESPONSE = { success: true };
 
 exports.login = async (req, res, next) => {
   const data = {

@@ -13,7 +13,7 @@ exports.register = async (req, res, next) => {
     const user = await User.create(data);
 
     return res.status(200).json({
-      status: 'success',
+      success: true,
       message: 'successfully created.',
       data: user
     });

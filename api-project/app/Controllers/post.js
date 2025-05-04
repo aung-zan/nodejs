@@ -4,14 +4,14 @@ const Post = require('../Models/Post');
 exports.list = async (req, res, next) => {
   try {
     const post = await Post.find();
-    const response = { status: 'success', data: post };
 
-    return res.status(200).json(response);
+    return res.status(200).json({
+      success: true,
+      data: post
+    });
   } catch (error) {
-    console.log(error);
-
     return res.status(505).json({
-      status: 'failed',
+      success: false,
       message: 'something went wrong.'
     });
   }
@@ -30,15 +30,13 @@ exports.store = async (req, res, next) => {
     const post = await Post.create(data);
 
     return res.status(201).json({
-      status: 'success',
+      success: true,
       message: 'successfully created.',
       data: post
     });
   } catch (error) {
-    console.log(error);
-
     return res.status(505).json({
-      status: 'failed',
+      success: false,
       message: 'something went wrong.'
     });
   }
@@ -52,21 +50,19 @@ exports.details = async (req, res, next) => {
     const post = await Post.findOne({ _id: postId, userId: userId });
     if (! post) {
       return res.status(404).json({
-        status: 'failed',
+        success: false,
         message: 'Not found.'
       });
     }
 
     return res.status(200).json({
-      status: 'success',
+      success: true,
       data: post
     });
 
   } catch (error) {
-    console.log(error);
-
     return res.status(404).json({
-      status: 'failed',
+      success: false,
       message: 'Not found.'
     });
   }
@@ -88,7 +84,7 @@ exports.update = async (req, res, next) => {
     const post = await Post.findOne({ _id: postId, userId: userId });
     if (! post) {
       return res.status(404).json({
-        status: 'failed',
+        success: false,
         message: 'Not found.'
       });
     }
@@ -100,7 +96,7 @@ exports.update = async (req, res, next) => {
     const updatedPost = await Post.findByIdAndUpdate(postId, data, { new: true });
 
     return res.status(200).json({
-      status: 'success',
+      success: true,
       message: 'successfully updated.',
       data: updatedPost
     });
@@ -117,7 +113,7 @@ exports.delete = async (req, res, next) => {
     const post = await Post.findOne({ _id: postId, userId: userId });
     if (! post) {
       return res.status(404).json({
-        status: 'failed',
+        success: false,
         message: 'Not found.'
       });
     }
@@ -125,7 +121,7 @@ exports.delete = async (req, res, next) => {
     await Post.deleteOne({ _id: postId });
 
     return res.status(200).json({
-      status: 200,
+      success: true,
       message: 'successfully deleted.'
     });
   } catch (error) {

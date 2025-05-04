@@ -1,4 +1,4 @@
-const RESPONSE = { status: 'success' };
+const RESPONSE = { success: true };
 
 exports.index = (req, res, next) => {
   RESPONSE.message = 'Welcome to express api.';

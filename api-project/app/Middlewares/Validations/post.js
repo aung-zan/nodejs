@@ -31,7 +31,7 @@ const afterValidation = async (req, res, next) => {
     }
 
     return res.status(422).json({
-      status: 'failed',
+      success: false,
       message: errorsObj
     });
   }
