@@ -20,7 +20,7 @@ exports.list = async (req, res, next) => {
 exports.store = async (req, res, next) => {
   try {
     const data = {
-      userId: 1,
+      userId: req.userId,
       title: req.body.title,
       imageName: req.file.originalname,
       fileName: req.file.filename,
@@ -46,9 +46,10 @@ exports.store = async (req, res, next) => {
 
 exports.details = async (req, res, next) => {
   try {
+    const userId = req.userId;
     const postId = req.params.postId;
 
-    const post = await Post.findOne({ _id: postId });
+    const post = await Post.findOne({ _id: postId, userId: userId });
     if (! post) {
       return res.status(404).json({
         status: 'failed',
@@ -73,6 +74,7 @@ exports.details = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
+    const userId = req.userId;
     const postId = req.params.postId;
     const image = req?.file;
     const data = {
@@ -83,7 +85,7 @@ exports.update = async (req, res, next) => {
       description: req.body.description,
     };
 
-    const post = await Post.findOne({ _id: postId });
+    const post = await Post.findOne({ _id: postId, userId: userId });
     if (! post) {
       return res.status(404).json({
         status: 'failed',
@@ -109,9 +111,10 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
+    const userId = req.userId;
     const postId = req.params.postId;
 
-    const post = await Post.findOne({ _id: postId });
+    const post = await Post.findOne({ _id: postId, userId: userId });
     if (! post) {
       return res.status(404).json({
         status: 'failed',

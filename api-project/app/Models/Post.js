@@ -1,8 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const PostSchema = Schema({
-  // userId: { type: Schema.Types.ObjectId, ref: 'users', required: true },
-  userId: { type: Number },
+  userId: { type: Schema.Types.ObjectId, ref: 'users', required: true },
   title: { type: String, required: true },
   imageName: { type: String, required: true },
   fileName: { type: String, required: true },
