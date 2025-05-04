@@ -1,5 +1,5 @@
 const { body, validationResult } = require('express-validator');
-const { removeImage } = require('../../utils/Helper');
+const { removeImage } = require('../../../utils/Helper');
 
 const validations = [
   body('title')
